@@ -1,6 +1,7 @@
 package com.example.mnist_project.models.implementation;
 
 import com.example.mnist_project.benchmark.BenchmarkResults;
+import com.example.mnist_project.models.implementation.knn.VanillaKnnModel;
 import com.example.mnist_project.service.BenchmarkService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +32,7 @@ class VanillaKnnModelTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Test
+    // @Test
     void findBestK() throws JsonProcessingException {
         List<Long> ks = List.of(10L, 30L, 50L, 70L, 100L, 120L, 150L, 170L, 200L, 220L, 250L, 270L, 300L, 320L, 350L, 370L, 400L);
         ks.parallelStream()

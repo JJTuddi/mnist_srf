@@ -1,4 +1,4 @@
-package com.example.mnist_project.models.implementation;
+package com.example.mnist_project.models.implementation.knn;
 
 import com.example.mnist_project.models.Model;
 import com.example.mnist_project.models.ModelType;
@@ -7,14 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
+import static com.example.mnist_project.util.Constants.bestK;
 
 @Slf4j
 //@Component
 public class VanillaKnnModel implements Model {
 
     private KnnAlgorithm knnAlgorithm;
-    private Long k = 150L;
+    private Long k = bestK;
 
     public VanillaKnnModel() {
         train();
@@ -27,9 +27,9 @@ public class VanillaKnnModel implements Model {
 
     @Override
     public void train() {
-        knnAlgorithm = KnnAlgorithm.builder()
+        knnAlgorithm = KnnAlgorithmOptimized.builder()
                 .k(k)
-                .images(DatasetReader.getTrainingImages().stream().map(list -> list.subList(0, 1000)).collect(Collectors.toList()))
+                .images(DatasetReader.getTrainingImages())
                 .build();
     }
 

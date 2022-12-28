@@ -33,7 +33,7 @@ public class BenchmarkService {
         log.info("Started to benchmark the model={}.", model.getType());
         ConfusionMatrix confusionMatrix = new ConfusionMatrix();
         IntStream.range(0, numberOfClasses).parallel().boxed().forEach(currentClass -> {
-            for (Mat testImage: DatasetIterator.getTestDatasetOfClass(currentClass)) {
+            for (Mat testImage: DatasetIterator.of().getTestDataOfClass(currentClass)) {
                 int predictedClass = model.predict(testImage);
                 confusionMatrix.increment(currentClass, predictedClass);
             }

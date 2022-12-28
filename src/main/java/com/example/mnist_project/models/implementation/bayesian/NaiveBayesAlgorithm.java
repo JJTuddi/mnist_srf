@@ -1,13 +1,12 @@
-package com.example.mnist_project.models.implementation;
+package com.example.mnist_project.models.implementation.bayesian;
 
-import com.example.mnist_project.models.Model;
-import com.example.mnist_project.models.ModelType;
 import com.example.mnist_project.util.DatasetIterator;
 import com.example.mnist_project.util.MnistPair;
 import com.example.mnist_project.util.PixelHelper;
+import lombok.Getter;
 import org.opencv.core.Mat;
-import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,22 +17,23 @@ import java.util.stream.IntStream;
 import static com.example.mnist_project.util.Constants.imageSize;
 import static com.example.mnist_project.util.Constants.numberOfClasses;
 
-//@Component
-public class NaiveBayesModel implements Model {
+@Getter
+public class NaiveBayesAlgorithm implements Serializable {
 
     private List<Double> posteriorProbability = DoubleStream.generate(() -> 0.0)
             .boxed()
             .limit(numberOfClasses)
             .collect(Collectors.toList());
-    private List<List<Double>> likelyhoods;
-    private AtomicInteger totalImages = new AtomicInteger(0);
+    private final List<List<Double>> likelyhoods;
+    private final AtomicInteger totalImages = new AtomicInteger(0);
+    private final DatasetIterator datasetIterator;
 
-    public NaiveBayesModel() {
-        train();
+    public NaiveBayesAlgorithm() {
+        this(DatasetIterator.of());
     }
 
-    @Override
-    public void train() {
+    public NaiveBayesAlgorithm(DatasetIterator datasetIterator) {
+        this.datasetIterator = datasetIterator;
         likelyhoods = IntStream.range(0, numberOfClasses)
                 .parallel()
                 .boxed()
@@ -44,27 +44,28 @@ public class NaiveBayesModel implements Model {
                 .collect(Collectors.toList());
     }
 
-    @Override
     public Integer predict(Mat image) {
-        return IntStream.range(0, numberOfClasses).parallel().boxed().map(currentClass -> {
-            int height = (int) image.size().height;
-            int width = (int) image.size().width;
-            double probability = posteriorProbability.get(currentClass);
-            for (int i = 0; i < height; i++) {
-                for (int j = 0; j < width; j++) {
-                    int index = i * height + j;
-                    if (PixelHelper.isPixelActive(image.get(i, j))) {
-                        probability += likelyhoods.get(currentClass).get(index);
+        return IntStream.range(0, numberOfClasses)
+                .parallel()
+                .boxed()
+                .map(currentClass -> {
+                    int height = (int) image.size().height;
+                    int width = (int) image.size().width;
+                    double probability = posteriorProbability.get(currentClass);
+                    for (int i = 0; i < height; i++) {
+                        for (int j = 0; j < width; j++) {
+                            int index = i * height + j;
+                            if (PixelHelper.isPixelActive(image.get(i, j))) {
+                                probability += likelyhoods.get(currentClass).get(index);
+                            }
+                        }
                     }
-                }
-            }
-            return MnistPair.builder().currentClass(currentClass).probability(-probability).build();
-        }).sorted(Comparator.comparing(MnistPair::getProbability)).collect(Collectors.toList()).get(0).getCurrentClass();
-    }
-
-    @Override
-    public ModelType getType() {
-        return ModelType.NAIVE_BAYESIAN;
+                    return MnistPair.builder().currentClass(currentClass).probability(-probability).build();
+                })
+                .sorted(Comparator.comparing(MnistPair::getProbability))
+                .collect(Collectors.toList())
+                .get(0)
+                .getCurrentClass();
     }
 
     private void updateLikelyhoodProbabilities(List<Double> likelyhoodProbabilities, Mat image) {
@@ -85,7 +86,7 @@ public class NaiveBayesModel implements Model {
                 .limit(imageSize)
                 .collect(Collectors.toList());
         int counter = 0;
-        for (Mat image: DatasetIterator.getTrainingDatasetOfClass(currentClass)) {
+        for (Mat image: DatasetIterator.of().getTrainingDataOfClass(currentClass)) {
             counter++;
             updateLikelyhoodProbabilities(likelyhoodProbability, image);
             posteriorProbability.set(currentClass, posteriorProbability.get(currentClass) + 1);

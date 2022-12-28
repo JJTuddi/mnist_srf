@@ -1,17 +1,15 @@
 package com.example.mnist_project.components;
 
 import lombok.AllArgsConstructor;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
 public class ImageHelper {
 
-    private GravityCenter gravityCenter;
     private Decoder decoder;
+    private GravityCenter gravityCenter;
 
     public Mat decodeImageFromBase64Encoding(String imageAsBase64String) {
         return decoder.base64StringToImage(imageAsBase64String);
@@ -32,8 +30,7 @@ public class ImageHelper {
     }
 
     private double[] getNegativeOfPixel(double[] pixel) {
-        return new double[]{255 - pixel[0]};
+        return new double[] { 255 - pixel[0] };
     }
-
 
 }

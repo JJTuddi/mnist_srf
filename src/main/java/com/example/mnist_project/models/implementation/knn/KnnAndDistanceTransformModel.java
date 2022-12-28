@@ -1,15 +1,14 @@
-package com.example.mnist_project.models.implementation;
+package com.example.mnist_project.models.implementation.knn;
 
 import com.example.mnist_project.models.Model;
 import com.example.mnist_project.models.ModelType;
 import org.opencv.core.Mat;
 
-//@Component
+
 public class KnnAndDistanceTransformModel implements Model {
 
     @Override
     public void train() {
-
     }
 
     @Override

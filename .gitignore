@@ -22,6 +22,8 @@ target/
 .mvn/**
 opencv
 opencv/**
+serializedModels
+serializedModels/**
 
 ### NetBeans ###
 /nbproject/private/
