@@ -1,8 +1,8 @@
 package com.example.mnist_project.config;
 
 import com.example.mnist_project.models.Model;
-import com.example.mnist_project.models.implementation.bayesian.BayesianBagging;
-import com.example.mnist_project.models.implementation.bayesian.NaiveBayesModel;
+import com.example.mnist_project.models.bayesian.BayesianBaggingModel;
+import com.example.mnist_project.models.bayesian.NaiveBayesModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,7 +24,7 @@ public class ModelConfig {
         if (modelIsSerialized(modelName)) {
             return loadModel(modelName);
         }
-        Model model = new BayesianBagging();
+        Model model = new BayesianBaggingModel();
         saveModel(modelName, model);
         return model;
     }

@@ -1,7 +1,5 @@
 package com.example.mnist_project.service;
 
-import com.example.mnist_project.components.Decoder;
-import com.example.mnist_project.components.GravityCenter;
 import com.example.mnist_project.components.ImageHelper;
 import com.example.mnist_project.models.Model;
 import com.example.mnist_project.models.ModelType;
@@ -19,7 +17,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class PredictionService {
 
-    private Decoder decoder;
     private List<Model> models;
     private ImageHelper imageHelper;
 

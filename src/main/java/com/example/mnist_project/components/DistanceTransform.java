@@ -1,39 +1,39 @@
 package com.example.mnist_project.components;
 
+import lombok.AllArgsConstructor;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static com.example.mnist_project.util.Constants.imageHeight;
 import static com.example.mnist_project.util.Constants.imageWidth;
-import static com.example.mnist_project.util.PixelHelper.isPixelActive;
+import static com.example.mnist_project.util.PrimitiveStructures.*;
 
-public class DistanceTransform {
+@Component
+@AllArgsConstructor
+public class DistanceTransform implements Serializable {
 
-    private Mat distanceTransform;
-    private ImageHelper imageHelper = new ImageHelper(new Decoder(), new GravityCenter());
+    private ImageHelper imageHelper;
 
-    public DistanceTransform(List<Mat> images) {
-        computeAverageDistanceTransformOfImages(images);
-    }
-
-    private void computeAverageDistanceTransformOfImages(List<Mat> images) {
+    public Mat computeAverageDistanceTransformOfImages(List<Mat> images) {
         if (images.isEmpty()) {
-            distanceTransform = Mat.zeros(imageHeight, imageWidth, CvType.CV_8UC1);
-            return;
+            return Mat.zeros(imageHeight, imageWidth, CvType.CV_8UC1);
         }
-        distanceTransform = images.parallelStream()
+        double[][] matrix = images.parallelStream()
                 .map(imageHelper::negateImage)
-                .map(image -> computeDistanceTransform(image, 7, 5))
-                .reduce(Mat.zeros(imageHeight, imageWidth, CvType.CV_8UC1), (acc, crt) -> {
+                .map(image -> imageToMatrix(computeDistanceTransform(image, 7, 5)))
+                .reduce(getZeroMatrixImage(), (acc, crt) -> {
                     for (int i = 0; i < imageHeight; i++) {
                         for (int j = 0; j < imageWidth; j++) {
-                            acc.put(i, j, acc.get(i, j)[0] + (crt.get(i, j)[0] / images.size()));
+                            acc[i][j] = acc[i][j] + crt[i][j] / images.size();
                         }
                     }
                     return acc;
                 });
+        return matrixToImage(matrix);
     }
 
     private Mat computeDistanceTransform(Mat image, double diagonal, double normal) {
@@ -61,22 +61,6 @@ public class DistanceTransform {
             }
         }
         return dtResult;
-    }
-
-    public double computeScore(Mat image) {
-        int count = 0;
-        double sum = 0;
-        int height = (int) image.size().height;
-        int width = (int) image.size().width;
-        for (int i = 1; i < height - 1; i++) {
-            for (int j = 1; j < width - 1; j++) {
-                if (isPixelActive(image.get(i, j))) {
-                    count++;
-                    sum += distanceTransform.get(i, j)[0];
-                }
-            }
-        }
-        return sum / count;
     }
 
 }

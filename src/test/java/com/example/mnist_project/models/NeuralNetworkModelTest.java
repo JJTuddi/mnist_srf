@@ -1,5 +1,6 @@
 package com.example.mnist_project.models;
 
+import com.example.mnist_project.models.neural_networks.NeuralNetworkModel;
 import com.example.mnist_project.util.ImageHelper;
 import org.junit.jupiter.api.Test;
 import org.opencv.core.CvType;

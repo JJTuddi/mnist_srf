@@ -1,0 +1,76 @@
+@startuml
+interface Model {
+    train()
+    predict(image: Mat): Integer
+    getType(): ModelType
+}
+
+enum ModelType {
+    VANILLA_KNN
+    NEURAL_NETWORK
+    NAIVE_BAYESIAN
+    BAYESIAN_BAGGING
+    KNN_AND_DISTANCE_TRANSFORM
+}
+
+abstract KnnAlgorithm {
+    - s: int
+    - k: long
+    - metric: KnnMetric
+    - images: List<List<Mat>>
+    * predict(image: Mat)
+    + getElementsOfCurrentClass(currentClass: int): List<Mat>
+    + getLabelFromPredictions(predictions: List<Double>): int
+    + computeDistance(from: Mat, to: Mat)
+}
+class VanillaKnnModel implements Model
+class KnnAndDistanceTransformModel implements Model
+class KnnAlgorithmImpl extends KnnAlgorithm
+class KnnAlgorithmOptimized extends KnnAlgorithm
+VanillaKnnModel --* KnnAlgorithm
+KnnAndDistanceTransformModel --* KnnAlgorithm
+
+class BayesianBaggingModel implements Model {
+    - bayesians: List<NaiveBayesAlgorithm>
+}
+class NaiveBayesianModel implements Model {
+    - naiveBayesAlgorithm: NaiveBayesAlgorithm
+}
+class NaiveBayesianAlgorithm {
+    - posteriorProbability: List<Double>
+    - likelyhoods: List<List<Double>>
+    - totalImages: AtomicInteger
+    - datasetIterator: DatasetIterator
+
+    + predict(image: Mat): Integer
+    - updateLikelyhoodProbabilities(likelyhoodProbabilities: List<Double>, image: Mat)
+    - computeLikelyhoodOfAClass(currentClass: Integer): List<Double>
+}
+NaiveBayesianModel --* "1" NaiveBayesianAlgorithm
+BayesianBaggingModel --* "many*" NaiveBayesianAlgorithm
+
+interface NeuralNetworkLayer {
+    compute(input: List<Double>): List<Double>
+}
+class NeuralNetwork {
+    - layers: List<NeuralNetworkLayer>
+    + compute(input: List<Double>): List<Double>
+}
+class NeuralNetworkModel implements Model {
+    - neuralNetwork: NeuralNetwork
+    - imageToListOfDouble(image: Mat): List<Double>
+}
+class NeuralNetworkDenseLayer implements NeuralNetworkLayer {
+    - bias: List<Double>
+    - kernel: List<List<Double>>
+    - activationFunction: ActivationFunction
+    - dotProduct( input: List<Double>): List<Double>
+    - addBias(dotResult: List<Double>): List<Double>
+    - verifyInput(input: List<Double>)
+    - verifyBiasAndKernel()
+}
+
+NeuralNetworkModel --* "1" NeuralNetwork
+NeuralNetwork --* "many*" NeuralNetworkLayer
+
+@enduml

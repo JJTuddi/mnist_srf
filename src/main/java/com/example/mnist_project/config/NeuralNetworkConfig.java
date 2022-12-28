@@ -1,9 +1,9 @@
 package com.example.mnist_project.config;
 
-import com.example.mnist_project.models.NeuralNetworkModel;
-import com.example.mnist_project.models.neural_networks.NeuralNetwork;
-import com.example.mnist_project.models.neural_networks.NeuralNetwork.NeuralNetworkBuilder;
-import com.example.mnist_project.models.neural_networks.layers.implementation.NeuralNetworkDenseLayer;
+import com.example.mnist_project.models.neural_networks.NeuralNetworkModel;
+import com.example.mnist_project.models.neural_networks.algorithm.NeuralNetwork;
+import com.example.mnist_project.models.neural_networks.algorithm.NeuralNetwork.NeuralNetworkBuilder;
+import com.example.mnist_project.models.neural_networks.algorithm.layers.implementation.NeuralNetworkDenseLayer;
 import com.example.mnist_project.util.ActivationFunction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

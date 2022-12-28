@@ -36,7 +36,24 @@ const extractConfusionMatrix = (k) => {
     return createConfusionMatrix(k, matrix);
 }
 
+const writeForLatex = (algorithm, matrix) => {
+    const result = `
+${algorithm.replace('_', '\\_')}
+$$
+    Confusion Matrix = \\begin{bmatrix}
+${
+    matrix.map(line => "\t" + line.join(' & ') + " ").join('\\\\\n')
+}
+    \\end{bmatrix}
+
+$$
+accuracy = ${Math.floor(computeAccuracy(matrix) * 10000) / 100}\\%
+`;
+    return result;
+}
+
 module.exports = {
+    writeForLatex,
     computeAccuracy,
     extractConfusionMatrix
 }

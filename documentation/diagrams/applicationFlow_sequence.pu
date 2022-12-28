@@ -1,0 +1,14 @@
+@startuml
+    actor Tuddi
+    boundary WebPaint
+    participant Application
+    control PreProcessingPipeline
+    collections Algorithms
+    Tuddi -> WebPaint: Drawing a Digit
+    WebPaint -> Application: Digit image in Base64
+    Application -> PreProcessingPipeline:
+    PreProcessingPipeline -> Algorithms: processed digit
+    Algorithms -> Application: predictions of digit
+    Application -> WebPaint: predictions of digit
+    WebPaint -> Tuddi: predictions of digit
+@enduml

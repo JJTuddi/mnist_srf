@@ -4,10 +4,12 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
+
 import static com.example.mnist_project.util.Constants.treshold;
 
 @Component
-public class GravityCenter {
+public class GravityCenter implements Serializable {
 
     public Mat center(Mat image) {
         Mat result = Mat.zeros(image.size(), image.type());

@@ -59,15 +59,12 @@ public abstract class DatasetIterator implements Serializable {
 
             private Iterable<Mat> getAll(String set, final int clazz) {
                 List<Mat> result = new LinkedList<>();
+                int index = 0;
                 while (true) {
-                    int index = 0;
                     String imageName = Constants.getImageName(set, clazz, index++);
                     File file = new File(imageName);
                     if (!file.exists()) {
                         break;
-                    }
-                    if (index % 1000 == 0) {
-                        System.out.println(index);
                     }
                     result.add(Imgcodecs.imread(imageName, Imgcodecs.IMREAD_GRAYSCALE));
                 }

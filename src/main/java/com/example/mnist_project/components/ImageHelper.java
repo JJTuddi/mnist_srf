@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import org.opencv.core.Mat;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
+
 @Component
 @AllArgsConstructor
-public class ImageHelper {
+public class ImageHelper implements Serializable {
 
     private Decoder decoder;
     private GravityCenter gravityCenter;
