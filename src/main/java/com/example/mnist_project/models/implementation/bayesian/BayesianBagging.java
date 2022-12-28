@@ -12,16 +12,17 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.example.mnist_project.models.ModelType.BAYESIAN_BAGGING;
+import static com.example.mnist_project.util.Constants.bestSForBayesianBagging;
 import static com.example.mnist_project.util.Constants.maxInEachTraining;
 import static com.example.mnist_project.util.Constants.numberOfClasses;
 
 
 public class BayesianBagging implements Model, Serializable {
-    private int s = 100;
+    private final int s;
     private List<NaiveBayesAlgorithm> bayesians;
 
     public BayesianBagging() {
-        train();
+        this(bestSForBayesianBagging);
     }
 
     public BayesianBagging(int s) {

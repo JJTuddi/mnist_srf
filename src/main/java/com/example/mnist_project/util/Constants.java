@@ -10,6 +10,8 @@ import static lombok.AccessLevel.NONE;
 public class Constants implements Serializable {
 
     public static final Integer numberOfClasses = 10;
+    public static final Long bestK = 10L;
+    public static final Integer bestSForBayesianBagging = 200;
     public static final Integer treshold = 128;
     public static final Integer imageWidth = 28;
     public static final Integer imageHeight = 28;

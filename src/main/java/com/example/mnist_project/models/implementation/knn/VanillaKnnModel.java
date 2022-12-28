@@ -7,12 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
 import org.springframework.stereotype.Component;
 
+import static com.example.mnist_project.util.Constants.bestK;
+
 @Slf4j
 @Component
 public class VanillaKnnModel implements Model {
 
     private KnnAlgorithm knnAlgorithm;
-    private Long k = 150L;
+    private Long k = bestK;
 
     public VanillaKnnModel() {
         train();

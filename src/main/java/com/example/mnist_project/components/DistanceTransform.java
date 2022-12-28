@@ -29,16 +29,11 @@ public class DistanceTransform {
                 .reduce(Mat.zeros(imageHeight, imageWidth, CvType.CV_8UC1), (acc, crt) -> {
                     for (int i = 0; i < imageHeight; i++) {
                         for (int j = 0; j < imageWidth; j++) {
-                            acc.put(i, j, acc.get(i, j)[0] + crt.get(i, j)[0]);
+                            acc.put(i, j, acc.get(i, j)[0] + (crt.get(i, j)[0] / images.size()));
                         }
                     }
                     return acc;
                 });
-        for (int i = 0; i < imageHeight; i++) {
-            for (int j = 0; j < imageWidth; j++) {
-                distanceTransform.put(i, j, distanceTransform.get(i, j)[0] / images.size());
-            }
-        }
     }
 
     private Mat computeDistanceTransform(Mat image, double diagonal, double normal) {
@@ -71,7 +66,8 @@ public class DistanceTransform {
     public double computeScore(Mat image) {
         int count = 0;
         double sum = 0;
-        int height = (int) image.size().height, width = (int) image.size().width;
+        int height = (int) image.size().height;
+        int width = (int) image.size().width;
         for (int i = 1; i < height - 1; i++) {
             for (int j = 1; j < width - 1; j++) {
                 if (isPixelActive(image.get(i, j))) {

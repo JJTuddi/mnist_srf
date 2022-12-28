@@ -6,12 +6,14 @@ import org.opencv.core.Mat;
 import java.io.Serializable;
 import java.util.List;
 
+import static com.example.mnist_project.util.Constants.bestK;
+
 @SuperBuilder
 public abstract class KnnAlgorithm implements Serializable {
 
     private long k;
     private List<List<Mat>> images;
-    private int s = 1000;
+    private int s;
 
     public int getS() {
         if (s == 0) {
@@ -22,7 +24,7 @@ public abstract class KnnAlgorithm implements Serializable {
 
     public long getK() {
         if (k == 0L) {
-            k = 150L;
+            k = bestK;
         }
         return k;
     }
