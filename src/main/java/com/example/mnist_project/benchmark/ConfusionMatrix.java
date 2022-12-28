@@ -26,7 +26,9 @@ public class ConfusionMatrix {
         validate(currentClass);
         int result = 0;
         for (int i = 0; i < matrix[currentClass].length; i++) {
-            result += matrix[currentClass][i];
+            if (i != currentClass) {
+                result += matrix[currentClass][i];
+            }
         }
         return result;
     }
@@ -35,7 +37,9 @@ public class ConfusionMatrix {
         validate(currentClass);
         int result = 0;
         for (int i = 0; i < matrix.length; i++) {
-            result += matrix[i][currentClass];
+            if (i != currentClass) {
+                result += matrix[i][currentClass];
+            }
         }
         return result;
     }

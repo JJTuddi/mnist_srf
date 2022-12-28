@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Component
+//@Component
 public class VanillaKnnModel implements Model {
 
     private KnnAlgorithm knnAlgorithm;

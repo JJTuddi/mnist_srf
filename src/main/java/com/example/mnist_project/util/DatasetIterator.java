@@ -18,7 +18,7 @@ public class DatasetIterator {
 
     private static class DatasetIteratorImpl implements Iterator<Mat> {
 
-        int index = 0;
+        int index = 30;
         int clazz;
         String dataset;
 
@@ -29,9 +29,6 @@ public class DatasetIterator {
 
         @Override
         public boolean hasNext() {
-            if ("test".equals(dataset) && index > 30) {
-                return false;
-            }
             File file = new File(getImageName());
             if (!file.exists()) {
                 return false;

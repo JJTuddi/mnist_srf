@@ -5,5 +5,6 @@ public enum ModelType {
     NAIVE_BAYESIAN,
     VANILLA_KNN,
     KNN_AND_DISTANCE_TRANSFORM,
+    NEURAL_NETWORK;
     
 }

@@ -22,7 +22,7 @@ import java.util.List;
 class VanillaKnnModelTest {
 
     static {
-        System.load("C:\\Users\\blideatudorel\\IdeaProjects\\ggg\\mnist_project\\opencv\\build\\java\\x64\\opencv_java460.dll");
+        System.load("D:\\Tuddi\\Desktop\\MNIST_faculta\\opencv\\build\\java\\x64\\opencv_java460.dll");
     }
 
     private static final String template = "bestk_%s.fit.json";

@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 import static com.example.mnist_project.util.Constants.imageSize;
 import static com.example.mnist_project.util.Constants.numberOfClasses;
 
-@Component
+//@Component
 public class NaiveBayesModel implements Model {
 
     private List<Double> posteriorProbability = DoubleStream.generate(() -> 0.0)
