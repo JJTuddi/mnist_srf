@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static com.example.mnist_project.util.Constants.numberOfClasses;
 import static com.example.mnist_project.util.PrimitiveStructures.getZeroMatrix;
 
 @Getter
@@ -26,7 +27,9 @@ public class ConfusionMatrix {
         validate(currentClass);
         int result = 0;
         for (int i = 0; i < matrix[currentClass].length; i++) {
-            result += matrix[currentClass][i];
+            if (i != currentClass) {
+                result += matrix[currentClass][i];
+            }
         }
         return result;
     }
@@ -35,7 +38,9 @@ public class ConfusionMatrix {
         validate(currentClass);
         int result = 0;
         for (int i = 0; i < matrix.length; i++) {
-            result += matrix[i][currentClass];
+            if (i != currentClass) {
+                result += matrix[i][currentClass];
+            }
         }
         return result;
     }
@@ -62,7 +67,7 @@ public class ConfusionMatrix {
 
     private void validate(int currentClass) {
         if (currentClass > matrix.length || currentClass < 0) {
-            throw new RuntimeException("This MNIST has only 9 classes, from 0 to 9.");
+            throw new RuntimeException(String.format("This MNIST has only %d classes, from 0 to %d.", numberOfClasses, numberOfClasses - 1));
         }
     }
 

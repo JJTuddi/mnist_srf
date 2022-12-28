@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class ImageHelper {
 
-    private GravityCenter gravityCenter;
     private Decoder decoder;
+    private GravityCenter gravityCenter;
 
     public Mat decodeImageFromBase64Encoding(String imageAsBase64String) {
         return decoder.base64StringToImage(imageAsBase64String);

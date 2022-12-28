@@ -4,22 +4,84 @@ import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-public class DatasetIterator {
+public abstract class DatasetIterator implements Serializable {
 
-    public static Iterable<Mat> getTrainingDatasetOfClass(int clazz) {
-        return () -> new DatasetIteratorImpl("train", clazz);
+    private static final String TEST = "test";
+    private static final String TRAIN = "train";
+
+    public abstract Iterable<Mat> getTrainingDataOfClass(int clazz);
+    public abstract Iterable<Mat> getTestDataOfClass(int clazz);
+
+    public static DatasetIterator of() {
+        return new DatasetIterator() {
+            @Override
+            public Iterable<Mat> getTrainingDataOfClass(int clazz) {
+                return () -> new DatasetIteratorImpl(TRAIN, clazz);
+            }
+
+            @Override
+            public Iterable<Mat> getTestDataOfClass(int clazz) {
+                return () -> new DatasetIteratorImpl(TEST, clazz);
+            }
+        };
     }
 
-    public static Iterable<Mat> getTestDatasetOfClass(int clazz) {
-        return () -> new DatasetIteratorImpl("test", clazz);
+    public static DatasetIterator of(int startingIndex, int maxIndex) {
+        return new DatasetIterator() {
+            @Override
+            public Iterable<Mat> getTrainingDataOfClass(final int clazz) {
+                return () -> new DatasetIteratorImpl(TRAIN, clazz, startingIndex, maxIndex);
+            }
+
+            @Override
+            public Iterable<Mat> getTestDataOfClass(final int clazz) {
+                return () -> new DatasetIteratorImpl(TEST, clazz, startingIndex, maxIndex);
+            }
+        };
     }
 
-    private static class DatasetIteratorImpl implements Iterator<Mat> {
+    public static DatasetIterator all() {
+        return new DatasetIterator() {
+            @Override
+            public Iterable<Mat> getTrainingDataOfClass(final int clazz) {
+                return getAll(TRAIN, clazz);
+            }
+
+            @Override
+            public Iterable<Mat> getTestDataOfClass(final int clazz) {
+                return getAll(TEST, clazz);
+            }
+
+            private Iterable<Mat> getAll(String set, final int clazz) {
+                List<Mat> result = new LinkedList<>();
+                while (true) {
+                    int index = 0;
+                    String imageName = Constants.getImageName(set, clazz, index++);
+                    File file = new File(imageName);
+                    if (!file.exists()) {
+                        break;
+                    }
+                    if (index % 1000 == 0) {
+                        System.out.println(index);
+                    }
+                    result.add(Imgcodecs.imread(imageName, Imgcodecs.IMREAD_GRAYSCALE));
+                }
+                return result;
+            }
+
+        };
+    }
+
+    private static class DatasetIteratorImpl implements Iterator<Mat>, Serializable {
 
         int index = 0;
         int clazz;
+        int maxIndex = -1;
         String dataset;
 
         public DatasetIteratorImpl(String dataset, int clazz) {
@@ -27,9 +89,16 @@ public class DatasetIterator {
             this.dataset = dataset;
         }
 
+        public DatasetIteratorImpl(String dataset, int clazz, int startingIndex, int maxIndex) {
+            this.clazz = clazz;
+            this.dataset = dataset;
+            this.index = startingIndex;
+            this.maxIndex = maxIndex;
+        }
+
         @Override
         public boolean hasNext() {
-            if ("test".equals(dataset) && index > 30) {
+            if (maxIndex != -1 && index >= maxIndex) {
                 return false;
             }
             File file = new File(getImageName());

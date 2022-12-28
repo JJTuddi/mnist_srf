@@ -31,6 +31,25 @@ public class BenchmarkResults {
                 .orElse(null);
     }
 
+    public double getOverallAccuracy() {
+        return Optional.ofNullable(confusionMatrix)
+                .map(ConfusionMatrix::getMatrix)
+                .map(confMatrix -> {
+                    double score = 0;
+                    double totalSum = 0;
+                    for (int i = 0; i < confMatrix.length; i++) {
+                        for (int j = 0; j < confMatrix[i].length; j++) {
+                            totalSum += confMatrix[i][j];
+                            if (i == 0) {
+                                score += confMatrix[i][j];
+                            }
+                        }
+                    }
+                    return score / totalSum;
+                })
+                .orElse(0.0);
+    }
+
     public Map<Integer, Metric> getMetricsOfDigits() {
         Map<Integer, Metric> result = new HashMap<>();
         for (int currentClass = 0; currentClass < numberOfClasses; currentClass++) {
